@@ -1,0 +1,396 @@
+{
+  "generated": "2026-11-06",
+  "model": {
+    "const": 0.09873576905044068,
+    "elo_diff": 0.0019566743117389327,
+    "is_home": 0.2457625602632398
+  },
+  "teams": [
+    {
+      "name": "Spain",
+      "elo": 2247.9
+    },
+    {
+      "name": "Argentina",
+      "elo": 2204.2
+    },
+    {
+      "name": "France",
+      "elo": 2133.8
+    },
+    {
+      "name": "England",
+      "elo": 2124.9
+    },
+    {
+      "name": "Portugal",
+      "elo": 2086.6
+    },
+    {
+      "name": "Brazil",
+      "elo": 2083.4
+    },
+    {
+      "name": "Colombia",
+      "elo": 2040.0
+    },
+    {
+      "name": "Netherlands",
+      "elo": 2020.9
+    },
+    {
+      "name": "Belgium",
+      "elo": 2013.3
+    },
+    {
+      "name": "Switzerland",
+      "elo": 2006.0
+    },
+    {
+      "name": "Morocco",
+      "elo": 1987.0
+    },
+    {
+      "name": "Japan",
+      "elo": 1984.4
+    },
+    {
+      "name": "Germany",
+      "elo": 1982.3
+    },
+    {
+      "name": "Italy",
+      "elo": 1971.1
+    },
+    {
+      "name": "Uruguay",
+      "elo": 1950.9
+    },
+    {
+      "name": "Norway",
+      "elo": 1932.7
+    },
+    {
+      "name": "Ecuador",
+      "elo": 1924.5
+    },
+    {
+      "name": "Denmark",
+      "elo": 1919.2
+    },
+    {
+      "name": "Austria",
+      "elo": 1914.5
+    },
+    {
+      "name": "United States",
+      "elo": 1913.8
+    },
+    {
+      "name": "Croatia",
+      "elo": 1913.0
+    },
+    {
+      "name": "Mexico",
+      "elo": 1910.1
+    },
+    {
+      "name": "Paraguay",
+      "elo": 1899.9
+    },
+    {
+      "name": "Algeria",
+      "elo": 1877.7
+    },
+    {
+      "name": "Senegal",
+      "elo": 1870.2
+    },
+    {
+      "name": "Canada",
+      "elo": 1870.1
+    },
+    {
+      "name": "Australia",
+      "elo": 1861.2
+    },
+    {
+      "name": "Russia",
+      "elo": 1859.9
+    },
+    {
+      "name": "South Korea",
+      "elo": 1857.2
+    },
+    {
+      "name": "Basque Country",
+      "elo": 1851.8
+    },
+    {
+      "name": "Iran",
+      "elo": 1849.3
+    },
+    {
+      "name": "Turkey",
+      "elo": 1845.3
+    },
+    {
+      "name": "Greece",
+      "elo": 1843.1
+    },
+    {
+      "name": "Sweden",
+      "elo": 1830.3
+    },
+    {
+      "name": "Ivory Coast",
+      "elo": 1824.8
+    },
+    {
+      "name": "Yugoslavia",
+      "elo": 1824.2
+    },
+    {
+      "name": "Chile",
+      "elo": 1823.6
+    },
+    {
+      "name": "Ukraine",
+      "elo": 1802.9
+    },
+    {
+      "name": "Venezuela",
+      "elo": 1802.2
+    },
+    {
+      "name": "Jersey",
+      "elo": 1793.7
+    },
+    {
+      "name": "Czechoslovakia",
+      "elo": 1792.6
+    },
+    {
+      "name": "Egypt",
+      "elo": 1790.6
+    },
+    {
+      "name": "Hungary",
+      "elo": 1790.3
+    },
+    {
+      "name": "Nigeria",
+      "elo": 1788.6
+    },
+    {
+      "name": "Scotland",
+      "elo": 1780.5
+    },
+    {
+      "name": "Uzbekistan",
+      "elo": 1772.5
+    },
+    {
+      "name": "Slovenia",
+      "elo": 1772.4
+    },
+    {
+      "name": "Republic of Ireland",
+      "elo": 1765.5
+    }
+  ],
+  "title_odds": [
+    {
+      "name": "Spain",
+      "p": 0.2978
+    },
+    {
+      "name": "Argentina",
+      "p": 0.206
+    },
+    {
+      "name": "France",
+      "p": 0.0966
+    },
+    {
+      "name": "England",
+      "p": 0.0906
+    },
+    {
+      "name": "Portugal",
+      "p": 0.0606
+    },
+    {
+      "name": "Brazil",
+      "p": 0.054
+    },
+    {
+      "name": "Colombia",
+      "p": 0.0354
+    },
+    {
+      "name": "Netherlands",
+      "p": 0.0266
+    },
+    {
+      "name": "Belgium",
+      "p": 0.0222
+    },
+    {
+      "name": "Switzerland",
+      "p": 0.0178
+    },
+    {
+      "name": "Morocco",
+      "p": 0.0154
+    },
+    {
+      "name": "Japan",
+      "p": 0.0126
+    },
+    {
+      "name": "Germany",
+      "p": 0.0104
+    },
+    {
+      "name": "Italy",
+      "p": 0.0082
+    },
+    {
+      "name": "Ecuador",
+      "p": 0.0056
+    },
+    {
+      "name": "Uruguay",
+      "p": 0.0052
+    },
+    {
+      "name": "Norway",
+      "p": 0.0044
+    },
+    {
+      "name": "Austria",
+      "p": 0.0038
+    },
+    {
+      "name": "United States",
+      "p": 0.0038
+    },
+    {
+      "name": "Croatia",
+      "p": 0.0032
+    },
+    {
+      "name": "Denmark",
+      "p": 0.003
+    },
+    {
+      "name": "Mexico",
+      "p": 0.003
+    },
+    {
+      "name": "Paraguay",
+      "p": 0.0026
+    },
+    {
+      "name": "Algeria",
+      "p": 0.0016
+    },
+    {
+      "name": "Canada",
+      "p": 0.0014
+    },
+    {
+      "name": "Senegal",
+      "p": 0.0012
+    },
+    {
+      "name": "Russia",
+      "p": 0.0012
+    },
+    {
+      "name": "Australia",
+      "p": 0.0008
+    },
+    {
+      "name": "South Korea",
+      "p": 0.0006
+    },
+    {
+      "name": "Iran",
+      "p": 0.0006
+    },
+    {
+      "name": "Czechoslovakia",
+      "p": 0.0006
+    },
+    {
+      "name": "Yugoslavia",
+      "p": 0.0004
+    },
+    {
+      "name": "Venezuela",
+      "p": 0.0004
+    },
+    {
+      "name": "Ukraine",
+      "p": 0.0004
+    },
+    {
+      "name": "Turkey",
+      "p": 0.0002
+    },
+    {
+      "name": "Basque Country",
+      "p": 0.0002
+    },
+    {
+      "name": "Ivory Coast",
+      "p": 0.0002
+    },
+    {
+      "name": "Sweden",
+      "p": 0.0002
+    },
+    {
+      "name": "Egypt",
+      "p": 0.0002
+    },
+    {
+      "name": "Greece",
+      "p": 0.0002
+    },
+    {
+      "name": "Slovenia",
+      "p": 0.0002
+    },
+    {
+      "name": "Republic of Ireland",
+      "p": 0.0002
+    },
+    {
+      "name": "Uzbekistan",
+      "p": 0.0002
+    },
+    {
+      "name": "Scotland",
+      "p": 0.0002
+    },
+    {
+      "name": "Jersey",
+      "p": 0.0
+    },
+    {
+      "name": "Chile",
+      "p": 0.0
+    },
+    {
+      "name": "Nigeria",
+      "p": 0.0
+    },
+    {
+      "name": "Hungary",
+      "p": 0.0
+    }
+  ]
+}

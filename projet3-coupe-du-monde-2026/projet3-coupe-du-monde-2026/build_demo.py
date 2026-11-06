@@ -1,0 +1,221 @@
+"""Construit demo/index.html : la démo live interactive (données du modèle intégrées)."""
+import json, os
+
+with open("figures/model_export.json", encoding="utf-8") as f:
+    data = json.load(f)
+
+os.makedirs("demo", exist_ok=True)
+
+HTML = r"""<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Simulateur de la Coupe du Monde 2026 — modèle Elo + Poisson + Monte Carlo, par Mohammed Zahi.">
+<title>Simulateur Coupe du Monde 2026</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--bg:#0B1220;--bg2:#0E1829;--surface:#121F38;--fg:#E7EDF7;--muted:#92A1B9;--line:rgba(255,255,255,.09);
+--blue:#1A56DB;--blue2:#3B82F6;--amber:#F59E0B;--draw:#64748B;
+--display:"Syne",system-ui,sans-serif;--body:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:900px;margin-inline:auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.1;margin:0;text-wrap:balance}
+a{color:var(--blue2)}
+.hero{padding-block:clamp(36px,7vw,64px);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(60% 60% at 15% 0%,rgba(26,86,219,.33),transparent 60%),radial-gradient(50% 50% at 95% 10%,rgba(245,158,11,.13),transparent 62%)}
+.hero .wrap{position:relative;z-index:1}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--blue2)}
+h1{font-size:clamp(2rem,6vw,3.3rem);letter-spacing:-.02em;margin:.4rem 0}
+.sub{color:var(--muted);max-width:60ch}
+.sub b{color:var(--fg);font-weight:600}
+section{padding-block:clamp(26px,5vw,44px)}
+.label{font-family:var(--mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.label::before{content:"";width:22px;height:2px;background:var(--amber)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:clamp(18px,3vw,26px)}
+.pick{display:flex;flex-wrap:wrap;gap:14px;align-items:end}
+.field{flex:1;min-width:150px}
+.field span{display:block;font-size:.8rem;color:var(--muted);margin-bottom:6px}
+select{width:100%;background:var(--bg2);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-family:var(--body);font-size:1rem}
+.vs{font-family:var(--display);font-weight:800;color:var(--muted);padding-bottom:10px}
+.score{text-align:center;font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,5vw,2.3rem);margin:18px 0 4px}
+.score small{color:var(--muted);font-family:var(--mono);font-size:.8rem;font-weight:500;display:block}
+.bars{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.row{display:grid;grid-template-columns:92px 1fr 52px;align-items:center;gap:10px;font-size:.9rem}
+.row span:first-child{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track{height:10px;background:rgba(255,255,255,.07);border-radius:6px;overflow:hidden}
+.fill{height:100%;width:0;border-radius:6px;transition:width .5s cubic-bezier(.2,.7,.3,1)}
+.pct{font-family:var(--mono);text-align:right}
+.tops{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+.chip{font-family:var(--mono);font-size:.78rem;color:var(--fg);background:rgba(255,255,255,.05);border:1px solid var(--line);padding:5px 10px;border-radius:8px}
+.chip b{color:var(--amber)}
+.odds{display:flex;flex-direction:column;gap:8px}
+.orow{display:grid;grid-template-columns:132px 1fr 50px;align-items:center;gap:10px;font-size:.88rem}
+.orow span:first-child{color:var(--fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.obar{height:14px;border-radius:5px;background:var(--blue2)}
+.orow:first-child .obar{background:var(--amber)}
+.op{font-family:var(--mono);text-align:right;color:var(--muted)}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-bottom:16px}
+button.run{font-family:var(--body);font-weight:600;background:var(--blue);color:#fff;border:none;border-radius:11px;padding:11px 18px;cursor:pointer;transition:background .2s,transform .15s}
+button.run:hover{background:var(--blue2);transform:translateY(-2px)}
+button.run:disabled{opacity:.6;cursor:default;transform:none}
+.simmeta{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.note{color:var(--muted);font-size:.82rem;margin-top:18px}
+footer{padding-block:30px;text-align:center;color:var(--muted);font-size:.8rem;border-top:1px solid var(--line)}
+footer a{font-weight:600;text-decoration:none}
+@media(max-width:560px){.vs{width:100%;text-align:center;padding:0}.orow{grid-template-columns:104px 1fr 46px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">Monte Carlo · Elo · Poisson</div>
+  <h1>Simulateur de la<br>Coupe du Monde 2026</h1>
+  <p class="sub">Modèle entraîné sur <b>~50 000 matchs internationaux réels</b> (1872–2026). Choisissez deux équipes, ou relancez la simulation complète du tournoi. <b>Tout tourne dans votre navigateur.</b></p>
+</div></header>
+
+<section><div class="wrap">
+  <div class="label">Simulateur de match</div>
+  <div class="panel">
+    <div class="pick">
+      <label class="field"><span>Équipe A</span><select id="teamA"></select></label>
+      <div class="vs">vs</div>
+      <label class="field"><span>Équipe B</span><select id="teamB"></select></label>
+    </div>
+    <div class="score" id="score">—<small id="xg"></small></div>
+    <div class="bars">
+      <div class="row"><span id="nameWin">A</span><div class="track"><div class="fill" id="fWin" style="background:var(--blue2)"></div></div><span class="pct" id="pWin">—</span></div>
+      <div class="row"><span>Match nul</span><div class="track"><div class="fill" id="fDraw" style="background:var(--draw)"></div></div><span class="pct" id="pDraw">—</span></div>
+      <div class="row"><span id="nameLoss">B</span><div class="track"><div class="fill" id="fLoss" style="background:var(--amber)"></div></div><span class="pct" id="pLoss">—</span></div>
+    </div>
+    <div class="tops" id="tops"></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="label">Probabilités de titre</div>
+  <div class="panel">
+    <div class="toolbar">
+      <button class="run" id="runBtn">↻ Relancer 2000 simulations</button>
+      <span class="simmeta" id="simMeta">affichage : 5000 simulations (pré-calculées)</span>
+    </div>
+    <div class="odds" id="odds"></div>
+    <p class="note">Plateau = les 48 meilleures sélections à l'Elo (proxy des 48 qualifiées). Matchs sur terrain neutre. Modèle statistique de référence, pas un oracle.</p>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  Projet de <b>Mohammed Zahi</b> · code &amp; méthodo sur <a href="https://github.com/Mohammed91080/portfolio-data" target="_blank" rel="noopener">GitHub</a> · données martj42 (domaine public)
+</div></footer>
+
+<script>
+var DATA = __DATA__;
+var B = DATA.model, TEAMS = DATA.teams;           // teams triés par Elo desc
+var FR = {Spain:"Espagne",Argentina:"Argentine",France:"France",England:"Angleterre",Portugal:"Portugal",Brazil:"Brésil",Colombia:"Colombie",Netherlands:"Pays-Bas",Belgium:"Belgique",Switzerland:"Suisse",Morocco:"Maroc",Japan:"Japon",Germany:"Allemagne",Italy:"Italie",Ecuador:"Équateur",Croatia:"Croatie",Uruguay:"Uruguay",Mexico:"Mexique","United States":"États-Unis",Spain_:"",Denmark:"Danemark",Senegal:"Sénégal","South Korea":"Corée du Sud",Austria:"Autriche",Sweden:"Suède",Norway:"Norvège",Egypt:"Égypte",Peru:"Pérou",Turkey:"Turquie",Poland:"Pologne",Serbia:"Serbie",Wales:"Pays de Galles",Ukraine:"Ukraine",Nigeria:"Nigéria",Algeria:"Algérie",Tunisia:"Tunisie","Ivory Coast":"Côte d'Ivoire",Ghana:"Ghana",Cameroon:"Cameroun",Iran:"Iran",Australia:"Australie",Canada:"Canada",Scotland:"Écosse",Greece:"Grèce","Czech Republic":"Tchéquie",Hungary:"Hongrie",Paraguay:"Paraguay",Chile:"Chili",Russia:"Russie"};
+function fr(n){return FR[n]||n;}
+var eloOf={}; TEAMS.forEach(function(t){eloOf[t.name]=t.elo;});
+
+function lam(d){return Math.exp(B.const + B.elo_diff*d);}       // buts attendus (neutre)
+function pois(k,l){var p=Math.exp(-l),f=1;for(var i=1;i<=k;i++)f*=i;return p*Math.pow(l,k)/f;}
+
+/* ---- simulateur de match (analytique) ---- */
+function renderMatch(){
+  var a=document.getElementById('teamA').value, b=document.getElementById('teamB').value;
+  var la=lam(eloOf[a]-eloOf[b]), lb=lam(eloOf[b]-eloOf[a]);
+  var N=11, win=0,draw=0,loss=0, best=[];
+  for(var i=0;i<N;i++)for(var j=0;j<N;j++){
+    var p=pois(i,la)*pois(j,lb);
+    if(i>j)win+=p; else if(i===j)draw+=p; else loss+=p;
+    best.push({s:i+'–'+j,p:p});
+  }
+  best.sort(function(x,y){return y.p-x.p;});
+  document.getElementById('score').childNodes[0].nodeValue=la.toFixed(2)+'  –  '+lb.toFixed(2);
+  document.getElementById('xg').textContent='buts attendus · '+fr(a)+' vs '+fr(b);
+  document.getElementById('nameWin').textContent=fr(a);
+  document.getElementById('nameLoss').textContent=fr(b);
+  set('fWin','pWin',win); set('fDraw','pDraw',draw); set('fLoss','pLoss',loss);
+  document.getElementById('tops').innerHTML=best.slice(0,4).map(function(x){
+    return '<span class="chip">'+x.s+' <b>'+Math.round(x.p*100)+'%</b></span>';}).join('');
+}
+function set(fill,pct,v){document.getElementById(fill).style.width=(v*100).toFixed(0)+'%';
+  document.getElementById(pct).textContent=Math.round(v*100)+'%';}
+
+/* ---- Monte Carlo du tournoi (en direct, JS) ---- */
+function samplePois(l){var L=Math.exp(-l),k=0,p=1;do{k++;p*=Math.random();}while(p>L);return k-1;}
+function simMatch(ei,ej){return [samplePois(lam(ei-ej)),samplePois(lam(ej-ei))];}
+function simTournament(E){
+  var n=E.length, idx=[]; for(var i=0;i<n;i++)idx.push(i);
+  // 12 groupes de 4 : tirage par pots (déjà triés par Elo)
+  var groups=[]; for(var g=0;g<12;g++)groups.push([]);
+  for(var pot=0;pot<4;pot++){
+    var arr=[]; for(var k=0;k<12;k++)arr.push(pot*12+k);
+    for(var m=arr.length-1;m>0;m--){var r=Math.floor(Math.random()*(m+1));var tmp=arr[m];arr[m]=arr[r];arr[r]=tmp;}
+    for(var gg=0;gg<12;gg++)groups[gg].push(arr[gg]);
+  }
+  var qual=[],thirds=[];
+  groups.forEach(function(gr){
+    var pts={},gd={},gf={}; gr.forEach(function(t){pts[t]=gd[t]=gf[t]=0;});
+    for(var x=0;x<4;x++)for(var y=x+1;y<4;y++){
+      var s=simMatch(E[gr[x]],E[gr[y]]); var i=gr[x],j=gr[y];
+      gf[i]+=s[0];gf[j]+=s[1];gd[i]+=s[0]-s[1];gd[j]+=s[1]-s[0];
+      if(s[0]>s[1])pts[i]+=3; else if(s[1]>s[0])pts[j]+=3; else {pts[i]++;pts[j]++;}
+    }
+    var ord=gr.slice().sort(function(a,b){return (pts[b]-pts[a])||(gd[b]-gd[a])||(gf[b]-gf[a])||(Math.random()-.5);});
+    qual.push(ord[0],ord[1]); thirds.push(ord[2]);
+  });
+  thirds.sort(function(a,b){return Math.random()-.5;});
+  var br=qual.concat(thirds.slice(0,8));
+  for(var m2=br.length-1;m2>0;m2--){var r2=Math.floor(Math.random()*(m2+1));var t2=br[m2];br[m2]=br[r2];br[r2]=t2;}
+  while(br.length>1){
+    var nx=[]; for(var c=0;c<br.length;c+=2){
+      var s2=simMatch(E[br[c]],E[br[c+1]]); var w;
+      if(s2[0]>s2[1])w=br[c]; else if(s2[1]>s2[0])w=br[c+1];
+      else {var pp=1/(1+Math.pow(10,-(E[br[c]]-E[br[c+1]])/400));w=Math.random()<pp?br[c]:br[c+1];}
+      nx.push(w);
+    } br=nx;
+  }
+  return br[0];
+}
+function renderOdds(list){
+  var max=list[0].p||1;
+  document.getElementById('odds').innerHTML=list.slice(0,12).map(function(o){
+    return '<div class="orow"><span>'+fr(o.name)+'</span><div class="obar" style="width:'+Math.max(2,(o.p/max*100))+'%"></div><span class="op">'+(o.p*100).toFixed(1)+'%</span></div>';
+  }).join('');
+}
+function runMC(){
+  var btn=document.getElementById('runBtn'); btn.disabled=true; btn.textContent='Simulation…';
+  setTimeout(function(){
+    var E=TEAMS.map(function(t){return t.elo;}), n=TEAMS.length, cnt=new Array(n).fill(0), SIM=2000;
+    for(var s=0;s<SIM;s++)cnt[simTournament(E)]++;
+    var list=TEAMS.map(function(t,i){return {name:t.name,p:cnt[i]/SIM};}).sort(function(a,b){return b.p-a.p;});
+    renderOdds(list);
+    document.getElementById('simMeta').textContent='affichage : 2000 simulations (en direct, dans votre navigateur)';
+    btn.disabled=false; btn.textContent='↻ Relancer 2000 simulations';
+  },30);
+}
+
+/* ---- init ---- */
+(function(){
+  var sa=document.getElementById('teamA'), sb=document.getElementById('teamB');
+  TEAMS.forEach(function(t){
+    sa.insertAdjacentHTML('beforeend','<option value="'+t.name+'">'+fr(t.name)+'</option>');
+    sb.insertAdjacentHTML('beforeend','<option value="'+t.name+'">'+fr(t.name)+'</option>');
+  });
+  sa.value='France'; sb.value='Morocco';
+  sa.onchange=renderMatch; sb.onchange=renderMatch;
+  renderMatch();
+  renderOdds(DATA.title_odds);
+  document.getElementById('runBtn').onclick=runMC;
+})();
+</script>
+</body>
+</html>
+"""
+
+out = HTML.replace("__DATA__", json.dumps(data, ensure_ascii=False))
+with open("demo/index.html", "w", encoding="utf-8") as f:
+    f.write(out)
+print("demo/index.html written,", len(out), "bytes")
